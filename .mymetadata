@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="SSHE"
+  id="myeclipse.1426312561903"
+  context-root="/missTest"
+  j2ee-spec="6.0"
+  archive="missTest.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+
