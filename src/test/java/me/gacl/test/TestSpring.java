@@ -5,16 +5,25 @@ import me.gacl.service.UserServiceI;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.thymeleaf.spring4.resourceresolver.SpringResourceResourceResolver;
+import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 public class TestSpring {
 
-    @Test
+    private ApplicationContext ac;
+
+	@Test
     public void test(){
-        //通过spring.xml配置文件创建Spring的应用程序上下文环境
-        ApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring.xml");
-        //从Spring的IOC容器中获取bean对象
+        ac = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        //浠嶴pring鐨処OC瀹瑰櫒涓幏鍙朾ean瀵硅薄
         UserServiceI userService = (UserServiceI) ac.getBean("userServiceImpl");
-        //执行测试方法
+        //鎵ц娴嬭瘯鏂规硶
         userService.test();
+        
+        SpringResourceResourceResolver rs = new  SpringResourceResourceResolver();
+        rs.getName();
+        
+        ThymeleafViewResolver thymeleafViewResolver = null;
+        //thymeleafViewResolver.clearCache();
     }
 }
