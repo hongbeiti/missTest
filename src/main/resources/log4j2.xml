@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	关于日志level共有8个级别，按照从低到高为：All < Trace < Debug < Info < Warn < Error < Fatal < OFF
+	Configuration配置节是log4j2.xml文件的根节点。该配置节有两个常用属性：status和monitorinterval。其中，
+	status：用来打印到控制台的内部 Log4j 日志事件的级别，设置该属性是查找 Log4j 故障的第一手工具。用来看到Log4j2启动和加载配置文件时的打印信息
+	monitorinterval：用于指定检查配置文件是否有更新的间隔秒数，单位是s，默认值是5s。另外，Configuration配置节有两个子节点：Appenders和Loggers。
+-->
+<configuration status="debug" MonitorInterval="120" >
+    <!--
+            属性（可选），用来定义常量，之后在其他配置项中通过${变量名}引用。
+            注意：linux与 windows 注意/ 与 \ 的区别，linux改为/
+            %d{yyyy.MM.dd HH:mm:ss.SSS}		表示输出到毫秒的时间
+            %t			输出当前线程名称
+            %level		日志级别
+            %-5level 	输出日志级别，-5表示左对齐并且固定输出5个字符，如果不足在右边补0
+              %M、%method	输出所在方法名
+              %msg 		日志文本
+              %n 			换行
+              %x			输出和当前线程相关联的NDC(嵌套诊断环境)，尤其用到像java servlets这样的多客户多线程的应用中
+            %thread		线程名字
+            %l			位置信息，等同于%C.%M(%F:%L)
+            %L 			输出行号
+            %C、%class	完整类名
+            %F、%file	文件名
+            %c{1.}		logger名字，比如LoggerName=org.apache.commons.Foo，Result=o.a.c.Foo
+        -->
+    <properties>
+        <Property name="log-path">log-output-test/logs/ems_main</Property>
+        <Property name="log_pattern">%d{yyyy.MM.dd HH:mm:ss.SSS} [%t]%-5level %class{36}  %M %L - %msg %xEx %n</Property>
+    </properties>
+
+    <!--输出源，用于定义日志输出的地方，常见的有三种子节点:Console、RollingFile、File、控制台ConsoleAppender、滚动文件FileAppender、RollingRandomAccessFile-->
+    <appenders>
+        <!--
+            这个输出控制台的配置
+            name：指定Appender的名字.
+            target：SYSTEM_OUT 或 SYSTEM_ERR,一般只设置默认:SYSTEM_OUT。
+            PatternLayout：输出格式，不设置默认为:%m%n。
+            ThresholdFilter属性：onMatch表示匹配设定的日志级别后是DENY还是ACCEPT，onMismatch表示不匹配设定的日志级别是DENY还是ACCEPT还是NEUTRAL
+         -->
+        <!--		<Console name="Console" target="SYSTEM_OUT">-->
+        <!--			<ThresholdFilter level="info" onMatch="ACCEPT" />-->
+        <!--			<PatternLayout	pattern="${log_pattern}" />-->
+        <!--		</Console>-->
+
+        <!-- 日志文件输出 -->
+        <!--		<File name="file" fileName="${log-path}/bg_logs/myFile-${date:yyyy-MM-dd}.log">-->
+        <!-- 日志输出格式 -->
+        <!--			<PatternLayout pattern="${log_pattern}"/>-->
+        <!--		</File>-->
+
+        <!--
+            <RollingRandomAccessFile>节点用来定义超过指定大小自动删除旧的创建新的的Appender,按照一定的策略滚动文件,网上有使用2种标签<RollingFile> vs <RollingRandomAccessFile>,后者有缓冲区Buffer的概念，缓冲区满了后才会写入磁盘，所以可能看不到实时滚动更新的日志（但其性能更好）。要看到实时滚动更新的日志，则用RollingFIle
+                name：指定Appender的名字。
+                fileName：指定输出日志的目的文件带全路径的文件名。
+                filePattern：当发生滚动时，文件的转移和重命名规则，指定新建日志文件的名称格式。
+            <ThresholdFilter>决定日志事件能否被输出
+                ACCEPT(接受)、DENY(拒绝)、NEUTRAL(中立)、onMatch（该级别及以上）表示匹配设定的日志级别后是DENY还是ACCEPT、onMismatch（该级别以下）表示不匹配设定的日志级别是DENY还是ACCEPT还是NEUTRAL
+            <PatternLayout>日志输出格式，不设置默认为:%m%n。
+            <Policies>指定滚动日志的策略，就是什么时候进行新建日志文件输出日志。
+                TimeBasedTriggeringPolicy：Policies子节点，基于时间的滚动策略，interval属性用来指定多久滚动一次，默认是1 hour。modulate=true用来调整时间：比如现在是早上3am，interval是4，那么第一次滚动是在4am，接着是8am，12am…而不是7am。
+                SizeBasedTriggeringPolicy：Policies子节点，基于指定文件大小的滚动策略，size属性用来定义每个日志文件的大小。
+            <DefaultRolloverStrategy>默认滚动策略,用来指定同一个文件夹下最多有几个日志文件，默认为最多同一文件夹下7个文件，超出时开始删除最旧的，创建新的(通过max属性)。
+        -->
+        <RollingFile name="Console" fileName="${log-path}/bg_logs/log-${date:yyyy-MM-dd}.log" filePattern="${log-path}/bg_logs/log/log-%d{yyyy-MM-dd-HH}.log-%i.gz">
+            <PatternLayout	pattern="${log_pattern}" />
+            <ThresholdFilter level="debug" onMatch="ACCEPT" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="30MB" />
+                <TimeBasedTriggeringPolicy modulate="true"  interval="24" />
+            </Policies>
+            <DefaultRolloverStrategy max="50" />
+        </RollingFile>
+        <!-- user日志文件 -->
+        <RollingFile name="user" fileName="${log-path}/bg_logs/user-${date:yyyy-MM-dd}.log" filePattern="${log-path}/bg_logs/user/user-%d{yyyy-MM-dd-HH}.log-%i.gz">
+            <PatternLayout	pattern="${log_pattern}" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="30MB" />
+                <TimeBasedTriggeringPolicy modulate="true"  interval="24" />
+            </Policies>
+            <DefaultRolloverStrategy max="40" />
+        </RollingFile>
+    </appenders>
+
+    <!--
+        只有定义了logger并引入的appender，appender才会生效,常见的有两种:Root和Logger
+        <Root>：节点用来指定项目的根日志，如果没有单独指定Logger，那么就会默认使用该Root日志输出
+            AppenderRef：指定该日志输出到哪个Appender
+        <level>：日志输出级别，如果没有指定该属性，则默认为 ERROR
+            name：该Logger所适用的类或者类所在的包路径
+            additivity ：设置日志事件是否在Root logger输出，为避免重复输出，可设置为false。如果没有指定该属性，则默认为 true
+            includeLocation:默认情况下，异步日志记录器不会将location信息传递给I/O线程，如果你的layouts或custom过滤器需要location信息，你需要在所有相关日志记录器(包括根日志记录器)的配置中设置“includeLocation=true”
+    -->
+    <Loggers>
+        <root level="debug" includeLocation="true">
+            <appender-ref ref="Console" />
+        </root>
+
+        <logger name="com.log.controller.LogOutputController" level="info" includeLocation="true" additivity="true">
+            <appender-ref ref="user" />
+        </logger>
+        <!--		<logger name="com.example.demo.bean.Teacher" level="info" includeLocation="true" additivity="true">-->
+        <!--			<appender-ref ref="file" />-->
+        <!--		</logger>-->
+    </Loggers>
+</configuration>

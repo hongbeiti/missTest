@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymele基1eaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+
+    <style type="text/css">
+        table{
+            border-collapse:collapse;
+        }
+        tr td{
+        border:1px solid black;
+        }
+    </style>
+
+</head>
+<body>
+<table>
+    <thead>
+
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td><img width="40" height="30"
+                 th:src="'data:image/jpg;base64,' + ${user.skillImage}"/>
+            <font size="3" th:text ="${user.skillName}"></font>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
