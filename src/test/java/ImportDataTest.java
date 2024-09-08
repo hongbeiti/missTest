@@ -65,7 +65,7 @@ public class ImportDataTest {
     @Test
     public void ImportData4() throws Exception{
 
-        try (PdfWriter writer = new PdfWriter("/Users/wangzhihua/Downloads/game_skills.pdf");
+        try (PdfWriter writer = new PdfWriter("D:\\game_skills.pdf");
              PdfDocument pdf = new PdfDocument(writer);
              com.itextpdf.layout.Document document = new com.itextpdf.layout.Document(pdf)) {
              //document.setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA));
@@ -102,9 +102,7 @@ public class ImportDataTest {
             for (int i = 0; i < list.size(); i++) {
                 GameSkills gameSkill = list.get(i);
 
-                if(i== 1){
-                    break;
-                }
+
                 // 获取图片的Base64编码字符串
                 // 将Base64字符串解码为字节数据
                 byte[] imageBytes = java.util.Base64.getDecoder().decode(gameSkill.getSkillImage());
