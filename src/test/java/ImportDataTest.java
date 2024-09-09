@@ -39,6 +39,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
 
+import static com.itextpdf.kernel.PdfException.PdfEncodings;
+import static com.itextpdf.kernel.pdf.PdfName.BaseFont;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public class ImportDataTest {
@@ -69,11 +72,14 @@ public class ImportDataTest {
              PdfDocument pdf = new PdfDocument(writer);
              com.itextpdf.layout.Document document = new com.itextpdf.layout.Document(pdf)) {
              //document.setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA));
-
             Table table = new Table(UnitValue.createPercentArray(new float[]{50, 50}));
             table.setWidth(UnitValue.createPercentValue(40)); // 设置表格宽度为100%
 
-            PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
+            //PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
+            //PdfFont font = PdfFontFactory.createFont("arial.ttf", "GBK", false);
+            PdfFont font = PdfFontFactory.createFont
+                    ("C:/Windows/Fonts/simsun.ttc,0", com.itextpdf.io.font.PdfEncodings.IDENTITY_H,false);
+
 
             // 添加表头
             table.addHeaderCell(new Cell().add(new Paragraph("游戏技能名称").setTextAlignment(TextAlignment.CENTER)
